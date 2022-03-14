@@ -1,0 +1,62 @@
+#basic graphics 
+#importing the co2  dataset in the enviornment 
+data("CO2")
+#view the dataset in table
+View(CO2)
+# using plot function to visualize the dataset using scatter plot
+#here i used uptake of c02 by plants as y-coordinate and conc of co2 in x-coordinate from the co2 dataset
+#shape of points(pch)=16, scaling amount(cex)=0.6,
+#color of points(color)=dodgerblue1 , title of the plot(main)= concentration of c02 uptake by plants ,
+#x-axis label (xlab)=concentration , y-axislabel (ylab)= "uptake"
+plot(uptake~conc,data=CO2,pch=16,cex=0.6,col="dodgerblue1",main="concentration of CO2 uptake by plants",xlab="concentration",ylab="uptake")
+# Here i have used two coloring points dodgerblue1 and limegreen to distinguish the type of plant and i labelled them 1 and 2 to differentiate the species 
+plot(uptake ~ conc, data=CO2,
+     col=c("dodgerblue1","limegreen")[as.integer(Type)],
+     pch=c(1,2)[as.integer(Type)])
+# in length i gave species of plant as input 
+legend(x="topleft",
+       legend=c("Quebec","Mississippi"),
+       col=c("dodgerblue1","limegreen"),
+       pch=c(1,2))
+# lattice package :
+library(lattice)
+xyplot(uptake~conc,
+       data = CO2,
+       pch=16,cex=0.6,main="concentration of CO2 uptake by plants",xlab="concentration",ylab="uptake")
+#We can color the points of the scatter plot based on the categories
+xyplot(uptake ~ conc,
+       data =CO2,
+       group = Type,
+       auto.key = TRUE)
+# creating lattice histogram plots 
+# this gives an total uptake of co2 based on percentage 
+histogram(~ uptake, data = CO2,
+          main = "R Lattice Histogram",
+          xlab = "uptake",
+          ylab = "Total Percentage",
+          col = c("chocolate2", "seagreen"))
+# it shows add multiple Histogram to the plot region and also categories the co2 uptake based on the species 
+histogram(~ uptake|Type, data = CO2,
+        main = "R Lattice Histogram",
+        xlab = "uptake",
+        ylab = "Total Percentage",
+        col = c("chocolate2", "seagreen"))
+# creating 3d model using lattice package wireframe  with co2 as a dataset 
+wireframe(x = volcano, data=CO2, xlab="concentration", ylab="uptake", zlab =" Type",shade = TRUE)
+#  ggplot2
+install.packages("tidyverse")
+library(tidyverse)
+# ggplot is a function to generate the plots in ggplot2 package and here i gave co2 dataset as input and used aesthetics(aes)function 
+#to assign the roles that the variables play in each graph like x= concentration and store it in a variable called surveys_plot
+surveys_plot <- ggplot(data = CO2,
+                       mapping = aes(x = conc, y = uptake))
+# + sign used to add layers must be placed at the end of each line containing a layer. If, instead, the + sign is added in the line before the other layer, ggplot2 will not add the new layer and will return an error message
+#geom_point() - is used to create points for the graphical representation 
+surveys_plot +
+  geom_point()
+# color points to be blue 
+surveys_plot +
+  geom_point(color="blue")
+# this color = type assigns the color based on the species of the plant 
+surveys_plot +
+  geom_point(aes(color = Type))
